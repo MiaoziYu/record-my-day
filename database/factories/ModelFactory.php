@@ -12,6 +12,8 @@
 */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
+use Carbon\Carbon;
+
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     static $password;
 
@@ -20,5 +22,14 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(App\Record::class, function (Faker\Generator $faker) {
+    return [
+        'name' => 'read book',
+        'started_at' => Carbon::today()->format('Y-m-d'),
+        'score' => 20,
+        'duration' => 2,
     ];
 });

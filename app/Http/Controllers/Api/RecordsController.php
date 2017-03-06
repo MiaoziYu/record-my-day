@@ -43,6 +43,7 @@ class RecordsController extends Controller
             'score' => request('score'),
             'duration' => request('duration'),
         ]);
+
         return response()->json([], 204);
     }
 
