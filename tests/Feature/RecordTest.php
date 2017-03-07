@@ -45,29 +45,29 @@ class RecordTest extends TestCase
 
         Auth::login($user);
 
-        $recordOne = factory(Record::class)->create([
+        factory(Record::class)->create([
             'user_id' => $user->id,
             'name' => 'watch movie',
             'started_at' => Carbon::today()->format('Y-m-d'),
         ]);
-        $recordTwo = factory(Record::class)->create([
+        factory(Record::class)->create([
             'user_id' => $user->id,
             'name' => 'swimming',
             'started_at' => Carbon::today()->format('Y-m-d'),
         ]);
-        $recordOne = factory(Record::class)->create([
+        factory(Record::class)->create([
             'user_id' => 2,
             'name' => 'eating',
             'started_at' => Carbon::today()->format('Y-m-d'),
         ]);
-        $recordThree = factory(Record::class)->create([
-            'user_id' => 2,
+        factory(Record::class)->create([
+            'user_id' => $user->id,
             'name' => 'playing game',
             'started_at' => Carbon::yesterday()->format('Y-m-d'),
         ]);
 
         // Act
-        $response = $this->get('/api/records/?started_at=' . $recordOne->started_at);
+        $response = $this->get('/api/records/?started_at=' . Carbon::today()->format('Y-m-d'));
 
         // Assert
         $response->assertSee('watch movie');

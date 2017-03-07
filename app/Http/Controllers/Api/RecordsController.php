@@ -39,12 +39,6 @@ class RecordsController extends Controller
     public function update()
     {
         auth()->user()->updateRecord();
-//        Record::find(request('id'))->update([
-//            'name' => request('name'),
-//            'started_at' => request('started_at'),
-//            'score' => request('score'),
-//            'duration' => request('duration'),
-//        ]);
 
         return response()->json([], 204);
     }
