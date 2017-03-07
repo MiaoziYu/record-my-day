@@ -15,6 +15,7 @@ class CreateRecordsTable extends Migration
     {
         Schema::create('records', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('user_id');
             $table->string('name');
             $table->date('started_at');
             $table->integer('score');

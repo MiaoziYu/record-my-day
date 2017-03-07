@@ -27,6 +27,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Record::class, function (Faker\Generator $faker) {
     return [
+        'user_id' => 1,
         'name' => 'read book',
         'started_at' => Carbon::today()->format('Y-m-d'),
         'score' => 20,

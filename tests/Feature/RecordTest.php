@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Record;
+use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -13,29 +15,14 @@ class RecordTest extends TestCase
 {
     use DatabaseMigrations;
 
-    /**  @test */
-    public function user_can_view_record_listing()
-    {
-        // Arrange
-        $record = factory(Record::class)->create([
-            'name' => 'watch movie',
-            'score' => 10,
-            'duration' => 2,
-        ]);
-
-        // Act
-        $response = $this->get('/api/records/'. $record->id);
-
-        // Assert
-        $response->assertSee('watch movie');
-        $response->assertSee('10');
-        $response->assertSee('2');
-    }
-
     /** @test */
     public function user_can_create_record()
     {
         // Arrange
+        $user = factory(User::class)->create();
+
+        Auth::login($user);
+
         $record = [
             'name' => 'watch movie',
             'started_at' => Carbon::now()->format('Y-m-d'),
@@ -54,15 +41,27 @@ class RecordTest extends TestCase
     public function user_can_view_records_of_a_certain_date()
     {
         // Arrange
+        $user = factory(User::class)->create();
+
+        Auth::login($user);
+
         $recordOne = factory(Record::class)->create([
+            'user_id' => $user->id,
             'name' => 'watch movie',
             'started_at' => Carbon::today()->format('Y-m-d'),
         ]);
         $recordTwo = factory(Record::class)->create([
+            'user_id' => $user->id,
             'name' => 'swimming',
             'started_at' => Carbon::today()->format('Y-m-d'),
         ]);
+        $recordOne = factory(Record::class)->create([
+            'user_id' => 2,
+            'name' => 'eating',
+            'started_at' => Carbon::today()->format('Y-m-d'),
+        ]);
         $recordThree = factory(Record::class)->create([
+            'user_id' => 2,
             'name' => 'playing game',
             'started_at' => Carbon::yesterday()->format('Y-m-d'),
         ]);
@@ -73,6 +72,7 @@ class RecordTest extends TestCase
         // Assert
         $response->assertSee('watch movie');
         $response->assertSee('swimming');
+        $response->assertDontSee('eating');
         $response->assertDontSee('playing game');
     }
 
@@ -80,7 +80,12 @@ class RecordTest extends TestCase
     public function user_can_delete_record()
     {
         // Arrange
+        $user = factory(User::class)->create();
+
+        Auth::login($user);
+
         $record = factory(Record::class)->create([
+            'user_id' => $user->id,
             'name' => 'watch movie',
         ]);
 
@@ -97,7 +102,12 @@ class RecordTest extends TestCase
     public function user_can_edit_record()
     {
         // Arrange
+        $user = factory(User::class)->create();
+
+        Auth::login($user);
+
         $record = factory(Record::class)->create([
+            'user_id' => $user->id,
             'name' => 'watch movie',
             'score' => 10,
             'duration' => 2,

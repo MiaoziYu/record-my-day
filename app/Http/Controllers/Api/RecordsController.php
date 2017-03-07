@@ -9,10 +9,15 @@ use Illuminate\Http\Request;
 
 class RecordsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         if (request()->started_at) {
-            $records = Record::where('started_at', request()->started_at)->get();
+            $records = auth()->user()->records()->where('started_at', request()->started_at)->get();
             return $records;
         }
     }
@@ -24,32 +29,29 @@ class RecordsController extends Controller
 
     public function store()
     {
-
-        Record::create([
-            'name' => request('name'),
-            'started_at' => request('started_at'),
-            'score' => request('score'),
-            'duration' => request('duration'),
-        ]);
+        auth()->user()->addRecord(
+            new Record(request(['name', 'started_at', 'score', 'duration']))
+        );
 
         return response()->json([], 201);
     }
 
     public function update()
     {
-        Record::find(request('id'))->update([
-            'name' => request('name'),
-            'started_at' => request('started_at'),
-            'score' => request('score'),
-            'duration' => request('duration'),
-        ]);
+        auth()->user()->updateRecord();
+//        Record::find(request('id'))->update([
+//            'name' => request('name'),
+//            'started_at' => request('started_at'),
+//            'score' => request('score'),
+//            'duration' => request('duration'),
+//        ]);
 
         return response()->json([], 204);
     }
 
     public function destroy()
     {
-        Record::find(request('id'))->delete();
+        auth()->user()->deleteRecord(request('id'));
 
         return response()->json([], 204);
     }

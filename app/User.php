@@ -26,4 +26,28 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function addRecord(Record $record)
+    {
+        $this->records()->save($record);
+    }
+
+    public function updateRecord()
+    {
+        $this->records()->find(request('id'))->update([
+            'name' => request('name'),
+            'started_at' => request('started_at'),
+            'score' => request('score'),
+            'duration' => request('duration'),
+        ]);
+    }
+
+    public function deleteRecord($id)
+    {
+        $this->records()->find($id)->delete();
+    }
+
+    public function records() {
+        return $this->hasMany(Record::class);
+    }
 }
