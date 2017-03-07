@@ -23,4 +23,6 @@ Route::group(['namespace' => 'Api'], function () {
     Route::put('/records/', 'RecordsController@update');
     Route::delete('/records/', 'RecordsController@destroy');
     Route::get('/records/{id}', 'RecordsController@show');
+
+    Route::get('/scores/', 'ScoresController@index');
 });
