@@ -37,10 +37,15 @@ class LoginController extends Controller
         $this->middleware('guest', ['except' => 'destroy']);
     }
 
+    public function create()
+    {
+        return view('auth.login');
+    }
+
     public function store()
     {
         if (auth()->attempt(request(['email', 'password']))) {
-            return redirect('/dashboard');
+            return redirect('/');
         }
 
         return back();

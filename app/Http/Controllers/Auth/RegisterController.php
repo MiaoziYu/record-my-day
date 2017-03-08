@@ -27,7 +27,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -54,6 +54,11 @@ class RegisterController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        return view('auth.register');
+    }
+
     /**
      * Create a new user instance after a valid registration.
      *
@@ -69,6 +74,6 @@ class RegisterController extends Controller
 
         auth()->login($user);
 
-        return redirect('/dashboard');
+        return redirect('/');
     }
 }
