@@ -15,7 +15,7 @@ class RecordObserver
      */
     public function created(Record $record)
     {
-        Score::saveScore($record);
+        auth()->user()->saveScore($record);
     }
 
     /**
@@ -26,7 +26,7 @@ class RecordObserver
      */
     public function updating(Record $record)
     {
-        Score::updateScore($record);
+        auth()->user()->updateScore($record);
     }
 
     /**
@@ -37,6 +37,6 @@ class RecordObserver
      */
     public function deleting(Record $record)
     {
-        Score::updateScore($record, true);
+        auth()->user()->updateScore($record, true);
     }
 }

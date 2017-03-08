@@ -9,14 +9,14 @@ use Illuminate\Http\Request;
 
 class ScoresController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-        if(request('end_date')) {
-            $dt = Carbon::createFromFormat('Y-m-d', request('end_date'));
-            $scores = Score::whereBetween('date', [$dt->subDays(30)->format('Y-m-d'), request('end_date')])->get();
-        } else {
-            $scores = Score::whereBetween('date', [Carbon::today()->subDays(30)->format('Y-m-d'), Carbon::today()->format('Y-m-d')])->get();
-        }
+        $scores = auth()->user()->getScoresWithinDateRange();
         return response()->json([$scores], 200);
     }
 }
