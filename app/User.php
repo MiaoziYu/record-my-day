@@ -28,6 +28,30 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function records() {
+        return $this->hasMany(Record::class);
+    }
+
+    public function scores() {
+        return $this->hasMany(Score::class);
+    }
+
+    public function showRecord($id)
+    {
+        return $this->records()->find($id);
+    }
+
+    public function showRecords()
+    {
+        if (request()->started_at) {
+            $records = $this->records()->where('started_at', request()->started_at)->get();
+        } else {
+            $records = $this->records()->where(Carbon::today()->format('Y-m-d'), request()->started_at)->get();
+        }
+
+        return $records;
+    }
+
     public function addRecord(Record $record)
     {
         $this->records()->save($record);
@@ -46,6 +70,23 @@ class User extends Authenticatable
     public function deleteRecord($id)
     {
         $this->records()->find($id)->delete();
+    }
+
+    public function getScore($date)
+    {
+        return $this->scores()->where('date', $date)->first()['score'];
+    }
+
+    public function getScoresWithinDateRange()
+    {
+        if(request('end_date')) {
+            $formattedEndDate = Carbon::createFromFormat('Y-m-d', request('end_date'));
+            $scores = $this->scores()->whereBetween('date', [$formattedEndDate->subDays(30)->format('Y-m-d'), request('end_date')])->get();
+        } else {
+            $scores = $this->scores()->whereBetween('date', [Carbon::today()->subDays(30)->format('Y-m-d'), Carbon::today()->format('Y-m-d')])->get();
+        }
+
+        return $scores;
     }
 
     public function saveScore(Record $record)
@@ -79,29 +120,5 @@ class User extends Authenticatable
             'score' => $score,
         ]);
     }
-
-    public function getScore($date)
-    {
-        return $this->scores()->where('date', $date)->first()['score'];
-    }
-
-    public function getScoresWithinDateRange()
-    {
-        if(request('end_date')) {
-            $formattedEndDate = Carbon::createFromFormat('Y-m-d', request('end_date'));
-            $scores = $this->scores()->whereBetween('date', [$formattedEndDate->subDays(30)->format('Y-m-d'), request('end_date')])->get();
-        } else {
-            $scores = $this->scores()->whereBetween('date', [Carbon::today()->subDays(30)->format('Y-m-d'), Carbon::today()->format('Y-m-d')])->get();
-        }
-
-        return $scores;
-    }
-
-    public function records() {
-        return $this->hasMany(Record::class);
-    }
-
-    public function scores() {
-        return $this->hasMany(Score::class);
-    }
 }
+

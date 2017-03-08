@@ -16,15 +16,12 @@ class RecordsController extends Controller
 
     public function index()
     {
-        if (request()->started_at) {
-            $records = auth()->user()->records()->where('started_at', request()->started_at)->get();
-            return $records;
-        }
+        return auth()->user()->showRecords();
     }
 
     public function show($id)
     {
-        return Record::find($id);
+        return auth()->user()->showRecord($id);
     }
 
     public function store()
