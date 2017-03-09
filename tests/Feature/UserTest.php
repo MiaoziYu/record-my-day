@@ -22,14 +22,13 @@ class UserTest extends TestCase
             'name' => 'Miaozi',
             'email' => 'my@opendi.com',
             'password' => 'secret',
-            'remember_token' => str_random(10),
         ];
 
         // Act
         $response = $this->post('/register', $userInfo);
 
         // Assert
-        $response->assertRedirect('/dashboard');
+        $response->assertRedirect('/');
     }
 
     /** @test */
@@ -45,7 +44,7 @@ class UserTest extends TestCase
         ]);
 
         // Assert
-        $response->assertRedirect('/dashboard');
+        $response->assertRedirect('/');
     }
 
     /** @test */

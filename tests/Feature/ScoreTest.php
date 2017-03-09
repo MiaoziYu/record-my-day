@@ -62,7 +62,7 @@ class ScoreTest extends TestCase
 
         // Act
 
-        $response = $this->actingAs($user)->get('/api/scores/?end_date=2017-03-06');
+        $response = $this->actingAs($user)->get('/api/scores/?end_date=2017-03-06&api_token=' . $user->api_token);
 
         // Assert
         $response->assertSee('"date":"2017-03-06"');

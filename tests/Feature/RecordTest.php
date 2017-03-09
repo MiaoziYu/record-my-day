@@ -31,7 +31,7 @@ class RecordTest extends TestCase
         ];
 
         // Act
-        $response = $this->json('POST', '/api/records/', $record);
+        $response = $this->json('POST', '/api/records/?api_token=' . $user->api_token, $record);
 
         // Assert
         $response->assertStatus(201);
@@ -67,7 +67,7 @@ class RecordTest extends TestCase
         ]);
 
         // Act
-        $response = $this->get('/api/records/?started_at=' . Carbon::today()->format('Y-m-d'));
+        $response = $this->get('/api/records/?started_at=' . Carbon::today()->format('Y-m-d') . '&api_token=' . $user->api_token);
 
         // Assert
         $response->assertSee('watch movie');
@@ -90,8 +90,8 @@ class RecordTest extends TestCase
         ]);
 
         // Act
-        $deleteResponse = $this->delete('/api/records/', ['id' => $record->id]);
-        $getResponse = $this->get('/api/records/'. $record->id);
+        $deleteResponse = $this->delete('/api/records/?api_token=' . $user->api_token, ['id' => $record->id]);
+        $getResponse = $this->get('/api/records/'. $record->id . '?api_token' . $user->api_token);
 
         // Assert
         $deleteResponse->assertStatus(204);
@@ -114,7 +114,7 @@ class RecordTest extends TestCase
         ]);
 
         // Act
-        $putResponse = $this->put('/api/records/', [
+        $putResponse = $this->put('/api/records/?api_token=' . $user->api_token, [
             'id' => $record->id,
             'name' => 'swimming',
             'started_at' => $record->started_at,
@@ -122,7 +122,7 @@ class RecordTest extends TestCase
             'duration' => 1,
         ]);
 
-        $getResponse = $this->get('/api/records/'. $record->id);
+        $getResponse = $this->get('/api/records/'. $record->id . '?api_token' . $user->api_token);
 
         // Assert
         $putResponse->assertStatus(204);
