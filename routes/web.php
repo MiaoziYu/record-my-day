@@ -11,6 +11,7 @@
 |
 */
 
+Auth::routes();
 Route::get('/', 'Web\HomeController@index');
 
 Route::group(['namespace' => 'Auth'], function () {
