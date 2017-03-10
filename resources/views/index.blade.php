@@ -1,5 +1,5 @@
-@extends('layout.master')
+@extends('layouts.app')
 
 @section('content')
-    <h1>Hello! {{ $user->name }}</h1>
+    <router-view></router-view>
 @endsection

@@ -13,8 +13,19 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
+import router from './router';
+import store from './store';
+// import * as filters from './filters'
 
-const app = new Vue({
-    el: '#app'
-});
+// register global utility filters.
+// Object.keys(filters).forEach(key => {
+//     Vue.filter(key, filters[key])
+// })
+
+// create the app instance.
+// here we inject the router and store to all child components,
+// making them available everywhere as `this.$router` and `this.$store`.
+const app = new window.Vue({
+    router,
+    store
+}).$mount('#app');
