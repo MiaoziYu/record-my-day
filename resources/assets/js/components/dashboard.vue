@@ -3,10 +3,16 @@
         <h1>dashboard</h1>
 
         <div>
-            <input type="text" name='name' placeholder="name" v-model="newRecord.name">
-            <input type="date" name='started_at' placeholder="started_at" v-model="newRecord.started_at">
-            <input type="text" name='score' placeholder="score" v-model="newRecord.score">
-            <input type="text" name='duration' placeholder="duration" v-model="newRecord.duration">
+            <input type="text" placeholder="name" v-model="newRecord.name">
+            <input type="date" v-model="newRecord.started_at">
+            <select v-model="newRecord.score">
+                <option value="-20">very negative</option>
+                <option value="-10">negative</option>
+                <option value="0">neutral</option>
+                <option value="10">positive</option>
+                <option value="20">very positive</option>
+            </select>
+            <input type="text" placeholder="duration" v-model="newRecord.duration">
             <button v-on:click="createRecord">submit</button>
         </div>
 
@@ -30,8 +36,17 @@ export default {
         }
     },
 
+    computed: {
+        defaultRecord() {
+            return {
+                score: 0
+            }
+        },
+    },
+
     beforeMount() {
-        this.getScores()
+        this.getScores();
+        this.newRecord = this.defaultRecord;
     },
 
     methods: {
@@ -40,15 +55,17 @@ export default {
                 this.scores = response.data[0];
             })
         },
+
         getRecordUrl(score) {
             return `/#/records/?date=${score.date}`;
         },
+
         createRecord() {
             api.createRecord(this.newRecord).then((response) => {
                 this.newRecord = {};
                 this.getScores();
             })
-        }
+        },
     }
 };
 </script>

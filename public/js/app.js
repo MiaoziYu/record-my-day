@@ -21014,6 +21014,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -21027,8 +21033,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             newRecord: {}
         };
     },
+
+
+    computed: {
+        defaultRecord: function defaultRecord() {
+            return {
+                score: 0
+            };
+        }
+    },
+
     beforeMount: function beforeMount() {
         this.getScores();
+        this.newRecord = this.defaultRecord;
     },
 
 
@@ -21059,10 +21076,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* WEBPACK VAR INJECTION */(function($) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_api__ = __webpack_require__(60);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -21094,11 +21143,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             records: [],
-            newRecord: {}
+            recordToCreate: {}
         };
     },
+
+
+    computed: {
+        date: function date() {
+            return window.location.hash.split('=').pop();
+        },
+        defaultRecord: function defaultRecord() {
+            return {
+                started_at: this.date,
+                score: 0
+            };
+        }
+    },
+
     beforeMount: function beforeMount() {
         this.getRecords();
+        this.recordToCreate = this.defaultRecord;
     },
 
 
@@ -21106,21 +21170,47 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getRecords: function getRecords() {
             var _this = this;
 
-            var date = window.location.hash.split('=').pop();
-            __WEBPACK_IMPORTED_MODULE_1__store_api__["a" /* default */].getRecords('&started_at=' + date).then(function (response) {
+            __WEBPACK_IMPORTED_MODULE_1__store_api__["a" /* default */].getRecords('&started_at=' + this.date).then(function (response) {
                 _this.records = response.data;
             });
         },
         createRecord: function createRecord() {
             var _this2 = this;
 
-            __WEBPACK_IMPORTED_MODULE_1__store_api__["a" /* default */].createRecord(this.newRecord).then(function (response) {
-                _this2.newRecord = {};
-                _this2.getScores();
+            __WEBPACK_IMPORTED_MODULE_1__store_api__["a" /* default */].createRecord(this.recordToCreate).then(function (response) {
+                _this2.getRecords();
+                _this2.recordToCreate = _this2.defaultRecord;
             });
+        },
+        updateRecord: function updateRecord(id, type) {
+            var _this3 = this;
+
+            var value = this.inputToText();
+            var recordToUpdate = {};
+            recordToUpdate.id = id;
+            recordToUpdate[type] = value;
+            __WEBPACK_IMPORTED_MODULE_1__store_api__["a" /* default */].updateRecord(recordToUpdate).then(function (response) {
+                _this3.getRecords();
+            });
+        },
+        textToInput: function textToInput() {
+            var text = $(event.target);
+            text.hide();
+            var input = $('.input', text.parent());
+            input.show();
+            input.focus();
+        },
+        inputToText: function inputToText() {
+            var input = $(event.target);
+            input.hide();
+            var text = $('.text', input.parent());
+            text.show();
+
+            return input.val();
         }
     }
 };
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(4)))
 
 /***/ }),
 /* 36 */
@@ -23607,7 +23697,7 @@ exports = module.exports = __webpack_require__(10)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -23621,7 +23711,7 @@ exports = module.exports = __webpack_require__(10)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -40803,92 +40893,181 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.newRecord.name),
-      expression: "newRecord.name"
+      value: (_vm.recordToCreate.name),
+      expression: "recordToCreate.name"
     }],
     attrs: {
       "type": "text",
-      "name": "name",
       "placeholder": "name"
     },
     domProps: {
-      "value": _vm._s(_vm.newRecord.name)
+      "value": _vm._s(_vm.recordToCreate.name)
     },
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.newRecord.name = $event.target.value
+        _vm.recordToCreate.name = $event.target.value
       }
     }
-  }), _vm._v(" "), _c('input', {
+  }), _vm._v(" "), _c('select', {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.newRecord.started_at),
-      expression: "newRecord.started_at"
+      value: (_vm.recordToCreate.score),
+      expression: "recordToCreate.score"
     }],
-    attrs: {
-      "type": "date",
-      "name": "started_at",
-      "placeholder": "started_at"
-    },
-    domProps: {
-      "value": _vm._s(_vm.newRecord.started_at)
-    },
     on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.newRecord.started_at = $event.target.value
+      "change": function($event) {
+        _vm.recordToCreate.score = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        })[0]
       }
     }
-  }), _vm._v(" "), _c('input', {
+  }, [_c('option', {
+    attrs: {
+      "value": "-20"
+    }
+  }, [_vm._v("very negative")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "-10"
+    }
+  }, [_vm._v("negative")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "0"
+    }
+  }, [_vm._v("neutral")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "10"
+    }
+  }, [_vm._v("positive")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "20"
+    }
+  }, [_vm._v("very positive")])]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.newRecord.score),
-      expression: "newRecord.score"
-    }],
-    attrs: {
-      "type": "text",
-      "name": "score",
-      "placeholder": "score"
-    },
-    domProps: {
-      "value": _vm._s(_vm.newRecord.score)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.newRecord.score = $event.target.value
-      }
-    }
-  }), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.newRecord.duration),
-      expression: "newRecord.duration"
+      value: (_vm.recordToCreate.duration),
+      expression: "recordToCreate.duration"
     }],
     attrs: {
       "type": "text",
-      "name": "duration",
       "placeholder": "duration"
     },
     domProps: {
-      "value": _vm._s(_vm.newRecord.duration)
+      "value": _vm._s(_vm.recordToCreate.duration)
     },
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.newRecord.duration = $event.target.value
+        _vm.recordToCreate.duration = $event.target.value
       }
     }
   }), _vm._v(" "), _c('button', {
     on: {
       "click": _vm.createRecord
     }
-  }, [_vm._v("submit")])]), _vm._v(" "), _c('ul', _vm._l((_vm.records), function(record) {
-    return _c('li', [_c('p', [_vm._v(_vm._s(record.name))]), _vm._v(" "), _c('p', [_vm._v("Score: " + _vm._s(record.score))])])
+  }, [_vm._v("submit")])]), _vm._v(" "), _c('ul', {
+    staticClass: "record-list"
+  }, _vm._l((_vm.records), function(record) {
+    return _c('li', {
+      staticClass: "record",
+      attrs: {
+        "id": record.id
+      }
+    }, [_c('div', [_c('span', {
+      staticClass: "text",
+      on: {
+        "dblclick": function($event) {
+          _vm.textToInput()
+        }
+      }
+    }, [_vm._v(_vm._s(record.name))]), _vm._v(" "), _c('input', {
+      staticClass: "input",
+      staticStyle: {
+        "display": "none"
+      },
+      domProps: {
+        "value": record.name
+      },
+      on: {
+        "blur": function($event) {
+          _vm.updateRecord(record.id, 'name')
+        },
+        "keyup": function($event) {
+          if (_vm._k($event.keyCode, "enter", 13)) { return; }
+          _vm.updateRecord(record.id, 'name')
+        }
+      }
+    })]), _vm._v(" "), _c('div', [_c('span', {
+      staticClass: "text",
+      on: {
+        "dblclick": function($event) {
+          _vm.textToInput()
+        }
+      }
+    }, [_vm._v(_vm._s(record.score))]), _vm._v(" "), _c('select', {
+      staticClass: "input",
+      staticStyle: {
+        "display": "none"
+      },
+      on: {
+        "blur": function($event) {
+          _vm.updateRecord(record.id, 'score')
+        },
+        "keyup": function($event) {
+          if (_vm._k($event.keyCode, "enter", 13)) { return; }
+          _vm.updateRecord(record.id, 'score')
+        }
+      }
+    }, [_c('option', {
+      attrs: {
+        "value": "-20"
+      }
+    }, [_vm._v("very negative")]), _vm._v(" "), _c('option', {
+      attrs: {
+        "value": "-10"
+      }
+    }, [_vm._v("negative")]), _vm._v(" "), _c('option', {
+      attrs: {
+        "value": "0"
+      }
+    }, [_vm._v("neutral")]), _vm._v(" "), _c('option', {
+      attrs: {
+        "value": "10"
+      }
+    }, [_vm._v("positive")]), _vm._v(" "), _c('option', {
+      attrs: {
+        "value": "20"
+      }
+    }, [_vm._v("very positive")])])]), _vm._v(" "), _c('div', [_c('span', {
+      staticClass: "text",
+      on: {
+        "dblclick": function($event) {
+          _vm.textToInput()
+        }
+      }
+    }, [_vm._v(_vm._s(record.duration))]), _vm._v(" "), _c('input', {
+      staticClass: "input",
+      staticStyle: {
+        "display": "none"
+      },
+      domProps: {
+        "value": record.duration
+      },
+      on: {
+        "blur": function($event) {
+          _vm.updateRecord(record.id, 'duration')
+        },
+        "keyup": function($event) {
+          if (_vm._k($event.keyCode, "enter", 13)) { return; }
+          _vm.updateRecord(record.id, 'duration')
+        }
+      }
+    })])])
   }))])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
@@ -40913,7 +41092,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }],
     attrs: {
       "type": "text",
-      "name": "name",
       "placeholder": "name"
     },
     domProps: {
@@ -40933,9 +41111,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "newRecord.started_at"
     }],
     attrs: {
-      "type": "date",
-      "name": "started_at",
-      "placeholder": "started_at"
+      "type": "date"
     },
     domProps: {
       "value": _vm._s(_vm.newRecord.started_at)
@@ -40946,28 +41122,44 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.newRecord.started_at = $event.target.value
       }
     }
-  }), _vm._v(" "), _c('input', {
+  }), _vm._v(" "), _c('select', {
     directives: [{
       name: "model",
       rawName: "v-model",
       value: (_vm.newRecord.score),
       expression: "newRecord.score"
     }],
-    attrs: {
-      "type": "text",
-      "name": "score",
-      "placeholder": "score"
-    },
-    domProps: {
-      "value": _vm._s(_vm.newRecord.score)
-    },
     on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.newRecord.score = $event.target.value
+      "change": function($event) {
+        _vm.newRecord.score = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        })[0]
       }
     }
-  }), _vm._v(" "), _c('input', {
+  }, [_c('option', {
+    attrs: {
+      "value": "-20"
+    }
+  }, [_vm._v("very negative")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "-10"
+    }
+  }, [_vm._v("negative")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "0"
+    }
+  }, [_vm._v("neutral")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "10"
+    }
+  }, [_vm._v("positive")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "20"
+    }
+  }, [_vm._v("very positive")])]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -40976,7 +41168,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }],
     attrs: {
       "type": "text",
-      "name": "duration",
       "placeholder": "duration"
     },
     domProps: {
@@ -43442,6 +43633,14 @@ function post(path, data, param) {
     });
 }
 
+function put(path, data, param) {
+    return axios.put("/api/" + path + "?api_token=" + apiToken + "&" + param, data).then(function (response) {
+        return response;
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
+
 /* harmony default export */ __webpack_exports__["a"] = {
     getScores: function getScores() {
         return get("scores/");
@@ -43451,6 +43650,9 @@ function post(path, data, param) {
     },
     createRecord: function createRecord(data) {
         return post("records/", data);
+    },
+    updateRecord: function updateRecord(data) {
+        return put("records/", data);
     }
 };
 

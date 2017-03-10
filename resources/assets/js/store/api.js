@@ -18,6 +18,16 @@ function post(path, data, param) {
         });
 }
 
+function put(path, data, param) {
+    return axios.put(`/api/${path}?api_token=${apiToken}&${param}`, data)
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
 export default {
 
     getScores() {
@@ -30,6 +40,10 @@ export default {
 
     createRecord(data) {
         return post("records/", data);
-    }
+    },
+
+    updateRecord(data) {
+        return put("records/", data);
+    },
 
 }

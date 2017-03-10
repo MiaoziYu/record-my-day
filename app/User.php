@@ -59,12 +59,11 @@ class User extends Authenticatable
 
     public function updateRecord()
     {
-        $this->records()->find(request('id'))->update([
-            'name' => request('name'),
-            'started_at' => request('started_at'),
-            'score' => request('score'),
-            'duration' => request('duration'),
-        ]);
+        $collection = collect(request()->all());
+        $collection->pull('id');
+        $collection->pull('api_token');
+
+        $this->records()->find(request('id'))->update($collection->all());
     }
 
     public function deleteRecord($id)
