@@ -90,7 +90,7 @@ class RecordTest extends TestCase
         ]);
 
         // Act
-        $deleteResponse = $this->delete('/api/records/?api_token=' . $user->api_token, ['id' => $record->id]);
+        $deleteResponse = $this->delete('/api/records/'. $record->id . '?api_token=' . $user->api_token);
         $getResponse = $this->get('/api/records/'. $record->id . '?api_token' . $user->api_token);
 
         // Assert
@@ -114,8 +114,7 @@ class RecordTest extends TestCase
         ]);
 
         // Act
-        $putResponse = $this->put('/api/records/?api_token=' . $user->api_token, [
-            'id' => $record->id,
+        $putResponse = $this->put('/api/records/'. $record->id .'?api_token=' . $user->api_token, [
             'name' => 'swimming',
             'started_at' => $record->started_at,
             'score' => 20,

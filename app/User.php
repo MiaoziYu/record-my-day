@@ -57,13 +57,13 @@ class User extends Authenticatable
         $this->records()->save($record);
     }
 
-    public function updateRecord()
+    public function updateRecord($id)
     {
         $collection = collect(request()->all());
         $collection->pull('id');
         $collection->pull('api_token');
 
-        $this->records()->find(request('id'))->update($collection->all());
+        $this->records()->find($id)->update($collection->all());
     }
 
     public function deleteRecord($id)

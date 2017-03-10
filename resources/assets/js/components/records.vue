@@ -16,7 +16,7 @@
         </div>
 
         <ul class="record-list">
-            <li class="record" :id="record.id" v-for="record in records">
+            <li class="record" v-for="record in records">
                 <div>
                     <span class="text" v-on:dblclick="textToInput()">{{ record.name }}</span>
                     <input class="input"
@@ -46,6 +46,7 @@
                            v-on:keyup.enter="updateRecord(record.id, 'duration')"
                            style="display: none">
                 </div>
+                <button v-on:click="deleteRecord(record.id)">×</button>
             </li>
         </ul>
     </div>
@@ -100,9 +101,8 @@
             updateRecord(id, type) {
                 let value = this.inputToText();
                 let recordToUpdate = {};
-                recordToUpdate.id = id;
                 recordToUpdate[type] = value;
-                api.updateRecord(recordToUpdate).then(response => {
+                api.updateRecord(id, recordToUpdate).then(response => {
                     this.getRecords();
                 })
             },
@@ -122,6 +122,12 @@
                 text.show();
 
                 return input.val();
+            },
+
+            deleteRecord(id) {
+                api.deleteRecord(id).then(response => {
+                    this.getRecords();
+                })
             },
 
         }

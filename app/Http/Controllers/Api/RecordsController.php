@@ -33,16 +33,16 @@ class RecordsController extends Controller
         return response()->json([], 201);
     }
 
-    public function update()
+    public function update($id)
     {
-        auth()->user()->updateRecord();
+        auth()->user()->updateRecord($id);
 
         return response()->json([], 204);
     }
 
-    public function destroy()
+    public function destroy($id)
     {
-        auth()->user()->deleteRecord(request('id'));
+        auth()->user()->deleteRecord($id);
 
         return response()->json([], 204);
     }

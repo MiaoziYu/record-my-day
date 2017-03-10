@@ -28,6 +28,16 @@ function put(path, data, param) {
         });
 }
 
+function remove(path, param) {
+    return axios.delete(`/api/${path}?api_token=${apiToken}&${param}&XDEBUG_SESSION_START=TRUE`)
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
 export default {
 
     getScores() {
@@ -42,8 +52,12 @@ export default {
         return post("records/", data);
     },
 
-    updateRecord(data) {
-        return put("records/", data);
+    updateRecord(id, data) {
+        return put(`records/${id}`, data);
+    },
+
+    deleteRecord(id) {
+        return remove(`records/${id}`);
     },
 
 }
