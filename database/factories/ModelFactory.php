@@ -35,3 +35,12 @@ $factory->define(App\Record::class, function (Faker\Generator $faker) {
         'duration' => 2,
     ];
 });
+
+$factory->define(App\Todo::class, function (Faker\Generator $faker) {
+    return [
+        'user_id' => 1,
+        'content' => 'go to park on sunday',
+        'score' => 10,
+        'is_finished' => false
+    ];
+});

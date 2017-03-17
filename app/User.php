@@ -28,12 +28,14 @@ class User extends Authenticatable
         'password', 'remember_token', 'api_token',
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | Records
+    |--------------------------------------------------------------------------
+    */
+
     public function records() {
         return $this->hasMany(Record::class);
-    }
-
-    public function scores() {
-        return $this->hasMany(Score::class);
     }
 
     public function showRecord($id)
@@ -69,6 +71,16 @@ class User extends Authenticatable
     public function deleteRecord($id)
     {
         $this->records()->find($id)->delete();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scores
+    |--------------------------------------------------------------------------
+    */
+
+    public function scores() {
+        return $this->hasMany(Score::class);
     }
 
     public function getScore($date)
@@ -117,6 +129,50 @@ class User extends Authenticatable
         $score_of_day->update([
             'score' => $score,
         ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Todos
+    |--------------------------------------------------------------------------
+    */
+
+    public function todos()
+    {
+        return $this->hasMany(Todo::class);
+    }
+
+    public function addTodo()
+    {
+        $this->todos()->create([
+            'score' => request('score'),
+            'content' => request('content'),
+            'is_finished' => request('is_finished'),
+        ]);
+    }
+
+    public function updateTodo($id)
+    {
+        $collection = collect(request()->all());
+        $collection->pull('id');
+        $collection->pull('api_token');
+
+        $this->todos()->find($id)->update($collection->all());
+    }
+
+    public function deleteTodo($id)
+    {
+        $this->todos()->find($id)->delete();
+    }
+
+    public function deleteAllFinishedTodos()
+    {
+        $this->todos()->where('is_finished', true)->delete();
+    }
+
+    public function getUnfinishedTodos()
+    {
+        return $this->todos()->where('is_finished', request('is_finished'))->get();
     }
 }
 

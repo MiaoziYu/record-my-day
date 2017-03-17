@@ -25,4 +25,10 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function () {
     Route::get('/records/{id}', 'RecordsController@show');
 
     Route::get('/scores/', 'ScoresController@index');
+
+    Route::get('/todos/', 'TodosController@index');
+    Route::post('/todos/', 'TodosController@store');
+    Route::put('/todos/{id}', 'TodosController@update');
+    Route::delete('/todos/{id}', 'TodosController@destroy');
+    Route::delete('/todos/', 'TodosController@deleteAllFinishedTodos');
 });
