@@ -98,7 +98,6 @@ class User extends Authenticatable
             ]);
         } else {
             $this->scores()->create([
-                'user_id' => $record['user_id'],
                 'date' => $record['started_at'],
                 'score' => $record['score'],
             ]);

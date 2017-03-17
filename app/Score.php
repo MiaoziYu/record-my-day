@@ -8,5 +8,12 @@ use Illuminate\Support\Facades\Event;
 
 class Score extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'date', 'score',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
