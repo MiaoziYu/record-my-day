@@ -19757,7 +19757,7 @@ function put(path, data, param) {
 }
 
 function remove(path, param) {
-    return axios.delete("/api/" + path + "?api_token=" + apiToken + "&" + param + "&XDEBUG_SESSION_START=TRUE").then(function (response) {
+    return axios.delete("/api/" + path + "?api_token=" + apiToken + "&" + param).then(function (response) {
         return response;
     }).catch(function (error) {
         console.log(error);
@@ -19779,6 +19779,18 @@ function remove(path, param) {
     },
     deleteRecord: function deleteRecord(id) {
         return remove("records/" + id);
+    },
+    getTodos: function getTodos(isFinished) {
+        return get("todos/", "is_finished=" + isFinished);
+    },
+    createTodo: function createTodo(data) {
+        return post("todos/", data);
+    },
+    updateTodo: function updateTodo(id, data) {
+        return put("todos/" + id, data);
+    },
+    deleteTodo: function deleteTodo(id) {
+        return remove("todos/" + id);
     }
 };
 
@@ -21075,6 +21087,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -21085,22 +21124,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             scores: [],
-            newRecord: {}
+            todos: [],
+            todoToCreate: {
+                "is_finished": false,
+                "score": 0
+            },
+            recordToCreate: {
+                "score": 0
+            }
         };
     },
-
-
-    computed: {
-        defaultRecord: function defaultRecord() {
-            return {
-                score: 0
-            };
-        }
-    },
-
     beforeMount: function beforeMount() {
         this.getScores();
-        this.newRecord = this.defaultRecord;
+        this.getTodos(false);
     },
 
 
@@ -21118,9 +21154,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         createRecord: function createRecord() {
             var _this2 = this;
 
-            __WEBPACK_IMPORTED_MODULE_1__store_api__["a" /* default */].createRecord(this.newRecord).then(function (response) {
-                _this2.newRecord = {};
+            __WEBPACK_IMPORTED_MODULE_1__store_api__["a" /* default */].createRecord(this.recordToCreate).then(function (response) {
+                _this2.recordToCreate = {
+                    "score": 0
+                };
                 _this2.getScores();
+            });
+        },
+        getTodos: function getTodos(isFinished) {
+            var _this3 = this;
+
+            isFinished = isFinished ? 1 : 0;
+            __WEBPACK_IMPORTED_MODULE_1__store_api__["a" /* default */].getTodos(isFinished).then(function (response) {
+                _this3.todos = response.data;
+            });
+        },
+        createTodo: function createTodo() {
+            var _this4 = this;
+
+            __WEBPACK_IMPORTED_MODULE_1__store_api__["a" /* default */].createTodo(this.todoToCreate).then(function (response) {
+                _this4.todoToCreate = {
+                    "content": "",
+                    "is_finished": false,
+                    "score": 0
+                };
+                _this4.getTodos(false);
+            });
+        },
+        toggleTodo: function toggleTodo(id) {
+            var _this5 = this;
+
+            var isFinished = event.target.checked;
+            __WEBPACK_IMPORTED_MODULE_1__store_api__["a" /* default */].updateTodo(id, { "is_finished": isFinished }).then(function (response) {
+                _this5.getTodos(!isFinished);
+            });
+        },
+        deleteTodo: function deleteTodo(id) {
+            var _this6 = this;
+
+            __WEBPACK_IMPORTED_MODULE_1__store_api__["a" /* default */].deleteTodo(id).then(function (response) {
+                _this6.getTodos(false);
             });
         }
     }
@@ -21199,7 +21272,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             records: [],
-            recordToCreate: {}
+            recordToCreate: {
+                started_at: this.date,
+                score: 0
+            }
         };
     },
 
@@ -21207,18 +21283,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         date: function date() {
             return window.location.hash.split('=').pop();
-        },
-        defaultRecord: function defaultRecord() {
-            return {
-                started_at: this.date,
-                score: 0
-            };
         }
     },
 
     beforeMount: function beforeMount() {
         this.getRecords();
-        this.recordToCreate = this.defaultRecord;
     },
 
 
@@ -21235,7 +21304,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             __WEBPACK_IMPORTED_MODULE_1__store_api__["a" /* default */].createRecord(this.recordToCreate).then(function (response) {
                 _this2.getRecords();
-                _this2.recordToCreate = _this2.defaultRecord;
+                _this2.recordToCreate = {
+                    started_at: _this2.date,
+                    score: 0 };
             });
         },
         updateRecord: function updateRecord(id, type) {
@@ -23759,7 +23830,7 @@ exports = module.exports = __webpack_require__(11)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -23773,7 +23844,7 @@ exports = module.exports = __webpack_require__(11)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -41152,51 +41223,51 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.newRecord.name),
-      expression: "newRecord.name"
+      value: (_vm.recordToCreate.name),
+      expression: "recordToCreate.name"
     }],
     attrs: {
       "type": "text",
       "placeholder": "name"
     },
     domProps: {
-      "value": _vm._s(_vm.newRecord.name)
+      "value": _vm._s(_vm.recordToCreate.name)
     },
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.newRecord.name = $event.target.value
+        _vm.recordToCreate.name = $event.target.value
       }
     }
   }), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.newRecord.started_at),
-      expression: "newRecord.started_at"
+      value: (_vm.recordToCreate.started_at),
+      expression: "recordToCreate.started_at"
     }],
     attrs: {
       "type": "date"
     },
     domProps: {
-      "value": _vm._s(_vm.newRecord.started_at)
+      "value": _vm._s(_vm.recordToCreate.started_at)
     },
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.newRecord.started_at = $event.target.value
+        _vm.recordToCreate.started_at = $event.target.value
       }
     }
   }), _vm._v(" "), _c('select', {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.newRecord.score),
-      expression: "newRecord.score"
+      value: (_vm.recordToCreate.score),
+      expression: "recordToCreate.score"
     }],
     on: {
       "change": function($event) {
-        _vm.newRecord.score = Array.prototype.filter.call($event.target.options, function(o) {
+        _vm.recordToCreate.score = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
@@ -41228,20 +41299,20 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.newRecord.duration),
-      expression: "newRecord.duration"
+      value: (_vm.recordToCreate.duration),
+      expression: "recordToCreate.duration"
     }],
     attrs: {
       "type": "text",
       "placeholder": "duration"
     },
     domProps: {
-      "value": _vm._s(_vm.newRecord.duration)
+      "value": _vm._s(_vm.recordToCreate.duration)
     },
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.newRecord.duration = $event.target.value
+        _vm.recordToCreate.duration = $event.target.value
       }
     }
   }), _vm._v(" "), _c('button', {
@@ -41254,7 +41325,107 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "href": _vm.getRecordUrl(score)
       }
     }, [_vm._v(_vm._s(score.score))])])
-  }))])
+  })), _vm._v(" "), _c('div', [_c('form', {
+    on: {
+      "submit": function($event) {
+        $event.preventDefault();
+        _vm.createTodo($event)
+      }
+    }
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.todoToCreate.content),
+      expression: "todoToCreate.content"
+    }],
+    attrs: {
+      "type": "text",
+      "placeholder": "add todo"
+    },
+    domProps: {
+      "value": _vm._s(_vm.todoToCreate.content)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.todoToCreate.content = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.todoToCreate.score),
+      expression: "todoToCreate.score"
+    }],
+    on: {
+      "change": function($event) {
+        _vm.todoToCreate.score = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        })[0]
+      }
+    }
+  }, [_c('option', {
+    attrs: {
+      "value": "-20"
+    }
+  }, [_vm._v("very negative")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "-10"
+    }
+  }, [_vm._v("negative")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "0"
+    }
+  }, [_vm._v("neutral")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "10"
+    }
+  }, [_vm._v("positive")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "20"
+    }
+  }, [_vm._v("very positive")])]), _vm._v(" "), _c('button', {
+    attrs: {
+      "type": "submit"
+    }
+  }, [_vm._v("Add")])]), _vm._v(" "), _c('ul', _vm._l((_vm.todos), function(todo) {
+    return _c('li', [_vm._v("\n                " + _vm._s(todo.content) + "\n                " + _vm._s(todo.score) + "\n                "), _c('input', {
+      attrs: {
+        "type": "checkbox"
+      },
+      domProps: {
+        "checked": todo.is_finished
+      },
+      on: {
+        "click": function($event) {
+          _vm.toggleTodo(todo.id)
+        }
+      }
+    }), _vm._v(" "), _c('button', {
+      on: {
+        "click": function($event) {
+          _vm.deleteTodo(todo.id)
+        }
+      }
+    }, [_vm._v("×")])])
+  })), _vm._v(" "), _c('button', {
+    on: {
+      "click": function($event) {
+        _vm.getTodos(false)
+      }
+    }
+  }, [_vm._v("unfinished Todos")]), _vm._v(" "), _c('button', {
+    on: {
+      "click": function($event) {
+        _vm.getTodos(true)
+      }
+    }
+  }, [_vm._v("finished Todos")])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

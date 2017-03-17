@@ -29,7 +29,7 @@ function put(path, data, param) {
 }
 
 function remove(path, param) {
-    return axios.delete(`/api/${path}?api_token=${apiToken}&${param}&XDEBUG_SESSION_START=TRUE`)
+    return axios.delete(`/api/${path}?api_token=${apiToken}&${param}`)
         .then(response => {
             return response;
         })
@@ -60,4 +60,19 @@ export default {
         return remove(`records/${id}`);
     },
 
+    getTodos(isFinished) {
+        return get("todos/", `is_finished=${isFinished}`);
+    },
+
+    createTodo(data) {
+        return post("todos/", data);
+    },
+
+    updateTodo(id, data) {
+        return put(`todos/${id}`, data);
+    },
+
+    deleteTodo(id) {
+        return remove(`todos/${id}`);
+    },
 }

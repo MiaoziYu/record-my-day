@@ -62,7 +62,10 @@
         data() {
             return {
                 records: [],
-                recordToCreate: {},
+                recordToCreate: {
+                    started_at: this.date,
+                    score: 0
+                },
             }
         },
 
@@ -70,18 +73,10 @@
             date() {
                 return window.location.hash.split('=').pop();
             },
-
-            defaultRecord() {
-                return {
-                    started_at: this.date,
-                    score: 0
-                }
-            },
         },
 
         beforeMount() {
             this.getRecords();
-            this.recordToCreate = this.defaultRecord;
         },
 
         methods: {
@@ -94,7 +89,9 @@
             createRecord() {
                 api.createRecord(this.recordToCreate).then(response => {
                     this.getRecords();
-                    this.recordToCreate = this.defaultRecord;
+                    this.recordToCreate = {
+                        started_at: this.date,
+                        score: 0                    };
                 })
             },
 
