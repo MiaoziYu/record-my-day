@@ -33,11 +33,26 @@
                 <button type="submit">Add</button>
             </form>
 
-            <ul>
+            <ul class="todo-list">
                 <li v-for="todo in todos">
-                    {{ todo.content }}
-                    {{ todo.score }}
-                    <input type="checkbox" :checked="todo.is_finished" @click="toggleTodo(todo.id)">
+                    <span class="text__edit" @dblclick="inputManager.textToInput">{{ todo.content }}</span>
+                    <input class="input__edit"
+                           :value="todo.content"
+                           @blur="updateTodo(todo.id, 'content')"
+                           @keyup.enter="updateTodo(todo.id)"
+                           style="display: none">
+                    <span class="text__edit" @dblclick="inputManager.textToInput">{{ todo.score }}</span>
+                    <select class="input__edit"
+                            @blur="updateTodo(todo.id, 'score')"
+                            @keyup.enter="updateTodo(todo.id, 'score')"
+                            style="display: none">
+                        <option value="-20">very negative</option>
+                        <option value="-10">negative</option>
+                        <option value="0">neutral</option>
+                        <option value="10">positive</option>
+                        <option value="20">very positive</option>
+                    </select>
+                    <input type="checkbox" class="checkbox" :checked="todo.is_finished" @click="toggleTodo(todo.id)">
                     <button @click="deleteTodo(todo.id)">×</button>
                 </li>
             </ul>
@@ -52,6 +67,7 @@
 <script>
 import Vue from 'vue';
 import api from '../store/api';
+import { InputManager } from "../classes/";
 
 export default {
     name: 'dashboard_component',
@@ -67,6 +83,7 @@ export default {
             recordToCreate: {
                 "score": 0,
             },
+            inputManager: new InputManager(),
         }
     },
 
@@ -118,6 +135,16 @@ export default {
             api.updateTodo(id, {"is_finished": isFinished}).then(response => {
                 this.getTodos(!isFinished);
             });
+        },
+
+        updateTodo(id, type) {
+            let value = this.inputManager.inputToText(),
+                isFinished = $(".checkbox", $(event.target).parent())[0].checked,
+                todoToUpdate = {};
+            todoToUpdate[type] = value;
+            api.updateTodo(id, todoToUpdate).then(response => {
+                this.getTodos(isFinished);
+            })
         },
 
         deleteTodo(id) {

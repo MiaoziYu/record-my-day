@@ -12,24 +12,24 @@
                 <option value="20">very positive</option>
             </select>
             <input type="text" placeholder="duration" v-model="recordToCreate.duration">
-            <button v-on:click="createRecord">submit</button>
+            <button @click="createRecord">submit</button>
         </div>
 
         <ul class="record-list">
             <li class="record" v-for="record in records">
                 <div>
-                    <span class="text" v-on:dblclick="textToInput()">{{ record.name }}</span>
-                    <input class="input"
+                    <span class="text__edit" @dblclick="inputManager.textToInput">{{ record.name }}</span>
+                    <input class="input__edit"
                            :value="record.name"
-                           v-on:blur="updateRecord(record.id, 'name')"
-                           v-on:keyup.enter="updateRecord(record.id, 'name')"
+                           @blur="updateRecord(record.id, 'name')"
+                           @keyup.enter="updateRecord(record.id, 'name')"
                            style="display: none">
                 </div>
                 <div>
-                    <span class="text" v-on:dblclick="textToInput()">{{ record.score }}</span>
-                    <select class="input"
-                            v-on:blur="updateRecord(record.id, 'score')"
-                            v-on:keyup.enter="updateRecord(record.id, 'score')"
+                    <span class="text__edit" @dblclick="inputManager.textToInput">{{ record.score }}</span>
+                    <select class="input__edit"
+                            @blur="updateRecord(record.id, 'score')"
+                            @keyup.enter="updateRecord(record.id, 'score')"
                             style="display: none">
                         <option value="-20">very negative</option>
                         <option value="-10">negative</option>
@@ -39,33 +39,36 @@
                     </select>
                 </div>
                 <div>
-                    <span class="text" v-on:dblclick="textToInput()">{{ record.duration }}</span>
-                    <input class="input"
+                    <span class="text__edit" @dblclick="inputManager.textToInput">{{ record.duration }}</span>
+                    <input class="input__edit"
                            :value="record.duration"
-                           v-on:blur="updateRecord(record.id, 'duration')"
-                           v-on:keyup.enter="updateRecord(record.id, 'duration')"
+                           @blur="updateRecord(record.id, 'duration')"
+                           @keyup.enter="updateRecord(record.id, 'duration')"
                            style="display: none">
                 </div>
-                <button v-on:click="deleteRecord(record.id)">×</button>
+                <button @click="deleteRecord(record.id)">×</button>
             </li>
         </ul>
     </div>
 </template>
 
 <script>
-    import Vue from 'vue';
-    import api from '../store/api';
+
+    import Vue from "vue";
+    import api from "../store/api";
+    import { InputManager } from "../classes/";
 
     export default {
-        name: 'records_component',
+        name: "records_component",
 
         data() {
             return {
                 records: [],
                 recordToCreate: {
                     started_at: this.date,
-                    score: 0
+                    score: 0,
                 },
+                inputManager: new InputManager(),
             }
         },
 
@@ -96,29 +99,12 @@
             },
 
             updateRecord(id, type) {
-                let value = this.inputToText();
+                let value = this.inputManager.inputToText();
                 let recordToUpdate = {};
                 recordToUpdate[type] = value;
                 api.updateRecord(id, recordToUpdate).then(response => {
                     this.getRecords();
                 })
-            },
-
-            textToInput() {
-                let text = $(event.target);
-                text.hide();
-                let input = $('.input', text.parent());
-                input.show();
-                input.focus();
-            },
-
-            inputToText() {
-                let input = $(event.target);
-                input.hide();
-                let text = $('.text', input.parent());
-                text.show();
-
-                return input.val();
             },
 
             deleteRecord(id) {

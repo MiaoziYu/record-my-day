@@ -1,11 +1,11 @@
 
 /**
- * First we will load all of this project's JavaScript dependencies which
+ * First we will load all of this project"s JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+require("./bootstrap");
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -13,9 +13,9 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-import router from './router';
-import store from './store';
-// import * as filters from './filters'
+import router from "./router";
+import store from "./store";
+// import * as filters from "./filters"
 
 // register global utility filters.
 // Object.keys(filters).forEach(key => {
@@ -28,4 +28,4 @@ import store from './store';
 const app = new window.Vue({
     router,
     store
-}).$mount('#app');
+}).$mount("#app");
