@@ -17,7 +17,7 @@ class CreateRecordsTable extends Migration
             $table->increments('id');
             $table->string('user_id');
             $table->string('name');
-            $table->date('started_at');
+            $table->date('finished_at');
             $table->integer('score');
             $table->integer('duration');
             $table->timestamps();

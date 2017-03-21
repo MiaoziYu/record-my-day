@@ -30,7 +30,7 @@ $factory->define(App\Record::class, function (Faker\Generator $faker) {
     return [
         'user_id' => 1,
         'name' => 'read book',
-        'started_at' => Carbon::today()->format('Y-m-d'),
+        'finished_at' => Carbon::today()->format('Y-m-d'),
         'score' => 20,
         'duration' => 2,
     ];
@@ -41,6 +41,7 @@ $factory->define(App\Todo::class, function (Faker\Generator $faker) {
         'user_id' => 1,
         'content' => 'go to park on sunday',
         'score' => 10,
-        'is_finished' => false
+        'is_finished' => false,
+        'finished_at' => null,
     ];
 });

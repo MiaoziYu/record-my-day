@@ -45,10 +45,10 @@ class User extends Authenticatable
 
     public function showRecords()
     {
-        if (request()->started_at) {
-            $records = $this->records()->where('started_at', request()->started_at)->get();
+        if (request()->finished_at) {
+            $records = $this->records()->where('finished_at', request()->finished_at)->get();
         } else {
-            $records = $this->records()->where(Carbon::today()->format('Y-m-d'), request()->started_at)->get();
+            $records = $this->records()->where(Carbon::today()->format('Y-m-d'), request()->finished_at)->get();
         }
 
         return $records;
@@ -85,50 +85,55 @@ class User extends Authenticatable
 
     public function getScore($date)
     {
-        return $this->scores()->where('date', $date)->first()['score'];
+        return $this->scores()->where('finished_at', $date)->first()['value'];
     }
 
     public function getScoresWithinDateRange()
     {
         if(request('end_date')) {
             $formattedEndDate = Carbon::createFromFormat('Y-m-d', request('end_date'));
-            $scores = $this->scores()->whereBetween('date', [$formattedEndDate->subDays(30)->format('Y-m-d'), request('end_date')])->get();
+            $scores = $this->scores()->whereBetween('finished_at', [$formattedEndDate->subDays(30)->format('Y-m-d'), request('end_date')])->get();
         } else {
-            $scores = $this->scores()->whereBetween('date', [Carbon::today()->subDays(30)->format('Y-m-d'), Carbon::today()->format('Y-m-d')])->get();
+            $scores = $this->scores()->whereBetween('finished_at', [Carbon::today()->subDays(30)->format('Y-m-d'), Carbon::today()->format('Y-m-d')])->get();
         }
 
         return $scores;
     }
 
-    public function saveScore(Record $record)
+    public function addScore($instance)
     {
-        $score_of_day = $this->scores()->where('date', $record['started_at']);
+        $scoreQuery = $this->scores()->where('finished_at', $instance['finished_at']);
 
-        if ($score_of_day->exists()) {
-            $score_of_day->update([
-                'score' => $score_of_day->first()['score'] + $record['score'],
+        if ($scoreQuery->exists()) {
+            $scoreQuery->update([
+                'value' => $scoreQuery->first()['value'] + $instance['score'],
             ]);
         } else {
             $this->scores()->create([
-                'date' => $record['started_at'],
-                'score' => $record['score'],
+                'finished_at' => $instance['finished_at'],
+                'value' => $instance['score'],
             ]);
         }
     }
 
-    public function updateScore(Record $record, $delete = false) {
-        $score_of_day = $this->scores()->where('date', $record['started_at']);
+    public function updateScore($instance) {
+        $scoreQuery = $this->scores()->where('finished_at', $instance['finished_at']);
+        $instanceQuery = $this->records()->find($instance->id);
+        $score = $scoreQuery->first()['value'] - $instanceQuery['score'] + $instance['score'];
 
-        if ($delete === false) {
-            $score_of_record = $this->records()->find($record->id);
-            $score = $score_of_day->first()['score'] - $score_of_record['score'] + $record['score'];
-        } else {
-            $score = $score_of_day->first()['score'] - $record['score'];
-        }
-
-        $score_of_day->update([
-            'score' => $score,
+        $scoreQuery->update([
+            'value' => $score,
         ]);
+    }
+
+    public function deleteScore($instance)
+    {
+        $scoreQuery = $this->scores()->where('finished_at', $instance['finished_at']);
+        $score = $scoreQuery->first()['value'] - $instance['score'];
+        $scoreQuery->update([
+            'value' => $score,
+        ]);
+
     }
 
     /*

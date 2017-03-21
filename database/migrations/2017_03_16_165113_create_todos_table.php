@@ -19,6 +19,7 @@ class CreateTodosTable extends Migration
             $table->text('content');
             $table->integer('score');
             $table->boolean('is_finished');
+            $table->date('finished_at')->nullable();
             $table->timestamps();
         });
     }

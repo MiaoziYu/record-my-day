@@ -25,7 +25,7 @@ class RecordTest extends TestCase
 
         $record = [
             'name' => 'watch movie',
-            'started_at' => Carbon::now()->format('Y-m-d'),
+            'finished_at' => Carbon::now()->format('Y-m-d'),
             'score' => 10,
             'duration' => 2,
         ];
@@ -48,26 +48,26 @@ class RecordTest extends TestCase
         factory(Record::class)->create([
             'user_id' => $user->id,
             'name' => 'watch movie',
-            'started_at' => Carbon::today()->format('Y-m-d'),
+            'finished_at' => Carbon::today()->format('Y-m-d'),
         ]);
         factory(Record::class)->create([
             'user_id' => $user->id,
             'name' => 'swimming',
-            'started_at' => Carbon::today()->format('Y-m-d'),
+            'finished_at' => Carbon::today()->format('Y-m-d'),
         ]);
         factory(Record::class)->create([
             'user_id' => 2,
             'name' => 'eating',
-            'started_at' => Carbon::today()->format('Y-m-d'),
+            'finished_at' => Carbon::today()->format('Y-m-d'),
         ]);
         factory(Record::class)->create([
             'user_id' => $user->id,
             'name' => 'playing game',
-            'started_at' => Carbon::yesterday()->format('Y-m-d'),
+            'finished_at' => Carbon::yesterday()->format('Y-m-d'),
         ]);
 
         // Act
-        $response = $this->get('/api/records/?started_at=' . Carbon::today()->format('Y-m-d') . '&api_token=' . $user->api_token);
+        $response = $this->get('/api/records/?finished_at=' . Carbon::today()->format('Y-m-d') . '&api_token=' . $user->api_token);
 
         // Assert
         $response->assertSee('watch movie');
@@ -116,7 +116,7 @@ class RecordTest extends TestCase
         // Act
         $putResponse = $this->put('/api/records/'. $record->id .'?api_token=' . $user->api_token, [
             'name' => 'swimming',
-            'started_at' => $record->started_at,
+            'finished_at' => $record->finished_at,
             'score' => 20,
             'duration' => 1,
         ]);

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Event;
 class Score extends Model
 {
     protected $fillable = [
-        'date', 'score',
+        'finished_at', 'value',
     ];
 
     public function user()

@@ -25,27 +25,27 @@ class ScoreTest extends TestCase
 
         factory(Record::class)->create([
             'user_id' => $user->id,
-            'started_at' => '2017-03-07',
+            'finished_at' => '2017-03-07',
             'score' => 70,
         ]);
         factory(Record::class)->create([
             'user_id' => $user->id,
-            'started_at' => '2017-03-06',
+            'finished_at' => '2017-03-06',
             'score' => 20,
         ]);
         factory(Record::class)->create([
             'user_id' => $user->id,
-            'started_at' => '2017-03-06',
+            'finished_at' => '2017-03-06',
             'score' => 30,
         ]);
         factory(Record::class)->create([
             'user_id' => $user->id,
-            'started_at' => '2017-03-05',
+            'finished_at' => '2017-03-05',
             'score' => -10,
         ]);
         factory(Record::class)->create([
             'user_id' => $user->id,
-            'started_at' => '2017-03-04',
+            'finished_at' => '2017-03-04',
             'score' => 40,
         ]);
 
@@ -56,7 +56,7 @@ class ScoreTest extends TestCase
         // create a record for another user
         factory(Record::class)->create([
             'user_id' => $anotherUser->id,
-            'started_at' => '2017-03-04',
+            'finished_at' => '2017-03-04',
             'score' => 10,
         ]);
 
@@ -65,14 +65,14 @@ class ScoreTest extends TestCase
         $response = $this->actingAs($user)->get('/api/scores/?end_date=2017-03-06&api_token=' . $user->api_token);
 
         // Assert
-        $response->assertSee('"date":"2017-03-06"');
-        $response->assertSee('"score":"50"');
-        $response->assertSee('"date":"2017-03-04"');
-        $response->assertSee('"score":"40"');
+        $response->assertSee('"finished_at":"2017-03-06"');
+        $response->assertSee('"value":"50"');
+        $response->assertSee('"finished_at":"2017-03-04"');
+        $response->assertSee('"value":"40"');
         // cannot see score out of requested date range
-        $response->assertDontSee('"date":"2017-03-07"');
-        $response->assertDontSee('"score":"70"');
+        $response->assertDontSee('"finished_at":"2017-03-07"');
+        $response->assertDontSee('"value":"70"');
         // cannot see score of other user
-        $response->assertDontSee('"score":"10"');
+        $response->assertDontSee('"value":"10"');
     }
 }

@@ -27,7 +27,7 @@ class RecordsController extends Controller
     public function store()
     {
         auth()->user()->addRecord(
-            new Record(request(['name', 'started_at', 'score', 'duration']))
+            new Record(request(['name', 'finished_at', 'score', 'duration']))
         );
 
         return response()->json([], 201);

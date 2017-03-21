@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Observers\RecordObserver;
+use App\Observers\TodoObserver;
 use App\Record;
+use App\Todo;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Record::observe(RecordObserver::class);
+        Todo::observe(TodoObserver::class);
     }
 
     /**

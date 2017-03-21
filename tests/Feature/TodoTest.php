@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Todo;
 use App\User;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -57,6 +58,7 @@ class TodoTest extends TestCase
             'user_id' => $user->id,
             'content' => 'eat an apple',
             'is_finished' => true,
+            'finished_at' => Carbon::now()->format('Y-m-d'),
         ]);
 
         // Act
@@ -92,6 +94,7 @@ class TodoTest extends TestCase
             'user_id' => $user->id,
             'content' => 'eat an apple',
             'is_finished' => true,
+            'finished_at' => Carbon::now()->format('Y-m-d'),
         ]);
 
         // Act
@@ -119,6 +122,7 @@ class TodoTest extends TestCase
         $response = $this->put('/api/todos/' . $todo->id . '?api_token=' . $user->api_token, [
             'content' => 'go to cinema',
             'is_finished' => true,
+            'finished_at' => Carbon::now()->format('Y-m-d'),
         ]);
 
         // Assert
@@ -156,6 +160,7 @@ class TodoTest extends TestCase
             'user_id' => $user->id,
             'content' => 'go to park on sunday',
             'is_finished' => true,
+            'finished_at' => Carbon::now()->format('Y-m-d'),
         ]);
 
         factory(Todo::class)->create([
@@ -168,6 +173,7 @@ class TodoTest extends TestCase
             'user_id' => $user->id,
             'content' => 'eat an apple',
             'is_finished' => true,
+            'finished_at' => Carbon::now()->format('Y-m-d'),
         ]);
 
         // Act

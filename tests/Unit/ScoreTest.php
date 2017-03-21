@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Record;
 use App\Score;
+use App\Todo;
 use App\User;
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -16,7 +17,7 @@ class ScoreTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function can_create_score()
+    public function can_create_score_when_a_record_is_created()
     {
         // Arrange
         $user = factory(User::class)->create();
@@ -33,11 +34,11 @@ class ScoreTest extends TestCase
         ]);
         factory(Record::class)->create([
             'user_id' => $user->id,
-            'started_at' => Carbon::yesterday()->format('Y-m-d'),
+            'finished_at' => Carbon::yesterday()->format('Y-m-d'),
             'score' => -10,
         ]);
         factory(Record::class)->create([
-            'started_at' => Carbon::yesterday()->format('Y-m-d'),
+            'finished_at' => Carbon::yesterday()->format('Y-m-d'),
             'score' => 30,
         ]);
 
@@ -49,7 +50,7 @@ class ScoreTest extends TestCase
     }
 
     /** @test */
-    public function can_update_score_when_a_record_was_edited()
+    public function can_update_score_when_a_record_is_edited()
     {
         // Arrange
         $user = factory(User::class)->create();
@@ -66,9 +67,9 @@ class ScoreTest extends TestCase
         ]);
 
         // Act
-        Record::find($record->id)->update([
+        $record->update([
             'name' => $record->name,
-            'started_at' => $record->started_at,
+            'finished_at' => $record->finished_at,
             'score' => 30,
             'duration' => $record->duration,
         ]);
@@ -78,7 +79,7 @@ class ScoreTest extends TestCase
     }
 
     /** @test */
-    public function can_update_score_when_a_record_was_deleted()
+    public function can_update_score_when_a_record_is_deleted()
     {
         // Arrange
         $user = factory(User::class)->create();
@@ -95,9 +96,42 @@ class ScoreTest extends TestCase
         ]);
 
         // Act
-        Record::find($record->id)->delete();
+        $record->delete();
 
         // Assert
         $this->assertEquals(10, auth()->user()->getScore(Carbon::today()->format('Y-m-d')));
+    }
+
+    /** @test */
+    public function can_update_score_when_a_todo_is_toggled()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+
+        auth()->login($user);
+
+        $todo = factory(Todo::class)->create([
+            'user_id' => $user->id,
+            'content' => 'go to park on sunday',
+            'score' => 20,
+            'is_finished' => false,
+        ]);
+
+        // Act
+        $todo->update([
+            'is_finished' => true,
+            'finished_at' => Carbon::today()->format('Y-m-d'),
+        ]);
+
+        // Assert
+        $this->assertEquals(20, auth()->user()->getScore(Carbon::today()->format('Y-m-d')));
+
+        // Act
+        $todo->update([
+            'is_finished' => false,
+        ]);
+
+        // Assert
+        $this->assertEquals(0, auth()->user()->getScore(Carbon::today()->format('Y-m-d')));
     }
 }
